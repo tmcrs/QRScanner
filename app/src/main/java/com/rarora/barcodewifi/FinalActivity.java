@@ -25,7 +25,6 @@ public class FinalActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.textView);
         code = (String) intent.getStringExtra("barcode");
         button = (Button) findViewById(R.id.button2);
-//        textView.setText(code);
 
         StringTokenizer st = new StringTokenizer(code, ":;");
         stArr = new String[st.countTokens()];
@@ -35,21 +34,21 @@ public class FinalActivity extends AppCompatActivity {
                     stArr[i] = (String) st.nextElement();
                 }
             }
-            textView.setText(stArr[0] + ": " + stArr[1] + "\n" +
-                    stArr[2] + ": " + stArr[3]);
-            button.setText("  " + "Connect to '" + stArr[1] + "'  ");
+            String textText = stArr[0] + ": " + stArr[1] + "\n" + stArr[2] + ": " + stArr[3];
+            String buttonText = "  " + "Connect to '" + stArr[1] + "'  ";
+            textView.setText(textText);
+            button.setText(buttonText);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getBaseContext(), "Connecting to '" + stArr[1] + "'", Toast.LENGTH_LONG).show();
-//                    Intent process = new Intent(FinalActivity.this, MainActivity.class);
-//                    FinalActivity.this.startActivity(process);
 
                 }
             });
         } else {
+            String buttonText = "  " + "Restart" + "  ";
             textView.setText(code);
-            button.setText("  " + "Restart" + "  ");
+            button.setText(buttonText);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
