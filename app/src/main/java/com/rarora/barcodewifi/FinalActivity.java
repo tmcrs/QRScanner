@@ -28,20 +28,20 @@ public class FinalActivity extends AppCompatActivity {
 
         StringTokenizer st = new StringTokenizer(code, ":;");
         stArr = new String[st.countTokens()];
-        if (stArr.length == 4) {
+        if (stArr.length == 7) {
             while (st.hasMoreElements()) {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 7; i++) {
                     stArr[i] = (String) st.nextElement();
                 }
             }
-            String textText = stArr[0] + ": " + stArr[1] + "\n" + stArr[2] + ": " + stArr[3];
-            String buttonText = "  " + "Connect to '" + stArr[1] + "'  ";
+            String textText = "SSID: " + stArr[2] + "\n" + "Password: " + stArr[6];
+            String buttonText = "  " + "Connect to '" + stArr[2] + "'  ";
             textView.setText(textText);
             button.setText(buttonText);
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getBaseContext(), "Connecting to '" + stArr[1] + "'", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Connecting to '" + stArr[2] + "'", Toast.LENGTH_LONG).show();
 
                 }
             });
