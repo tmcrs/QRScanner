@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PICK_IMAGE = 100;
     Uri imageUri;
     Bitmap myBitmap;
+    String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,33 +66,36 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        String result;
-        super.onActivityResult(requestCode,resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
-            imageUri = data.getData();
-            try {
-                myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(result != null) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+                imageUri = data.getData();
+                try {
+                    myBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            BarcodeDetector detector =
+                    new BarcodeDetector.Builder(getApplicationContext())
+                            .setBarcodeFormats(Barcode.DATA_MATRIX | Barcode.QR_CODE)
+                            .build();
+            if (!detector.isOperational()) {
+                result = "Could not set up the detector!";
+                return;
+            }
+            Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
+            SparseArray<Barcode> barcodes = detector.detect(frame);
+            Barcode thisCode = barcodes.valueAt(0);
+
+            result = thisCode.rawValue;
+
+            Intent display = new Intent(MainActivity.this, FinalActivity.class);
+            display.putExtra("barcode", result);
+            MainActivity.this.startActivity(display);
+        } else {
+            Intent display = new Intent(MainActivity.this, MainActivity.class);
+            MainActivity.this.startActivity(display);
         }
-        BarcodeDetector detector =
-                new BarcodeDetector.Builder(getApplicationContext())
-                        .setBarcodeFormats(Barcode.DATA_MATRIX | Barcode.QR_CODE)
-                        .build();
-        if(!detector.isOperational()){
-            result = "Could not set up the detector!";
-            return;
-        }
-        Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
-        SparseArray<Barcode> barcodes = detector.detect(frame);
-        Barcode thisCode = barcodes.valueAt(0);
-
-        result = thisCode.rawValue;
-
-        Intent display = new Intent(MainActivity.this, FinalActivity.class);
-        display.putExtra("barcode", result);
-        MainActivity.this.startActivity(display);
-
     }
 }
