@@ -5,28 +5,21 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
-import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
-    Button scanButton, galleryButton;
+    Button scanButton, galleryButton, createButton;
     private static final int PICK_IMAGE = 100;
     Uri imageUri;
     Bitmap myBitmap;
@@ -39,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         scanButton = (Button) findViewById(R.id.button);
         galleryButton = (Button) findViewById(R.id.button4);
-
+        createButton = (Button) findViewById(R.id.button5);
 
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,14 +40,20 @@ public class MainActivity extends AppCompatActivity {
                 Intent process = new Intent(MainActivity.this, ScanActivity.class);
                 MainActivity.this.startActivity(process);
             }
-
         });
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openGallery();
+            }
+        });
 
+        createButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, QRGenActivity.class);
+                MainActivity.this.startActivity(intent);
             }
         });
     }
@@ -65,8 +64,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(result != null) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(getBaseContext(), "Please select an image", Toast.LENGTH_LONG).show();
+            Intent display = new Intent(MainActivity.this, MainActivity.class);
+            MainActivity.this.startActivity(display);
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
             if (resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
                 imageUri = data.getData();
@@ -92,9 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
             Intent display = new Intent(MainActivity.this, FinalActivity.class);
             display.putExtra("barcode", result);
-            MainActivity.this.startActivity(display);
-        } else {
-            Intent display = new Intent(MainActivity.this, MainActivity.class);
             MainActivity.this.startActivity(display);
         }
     }

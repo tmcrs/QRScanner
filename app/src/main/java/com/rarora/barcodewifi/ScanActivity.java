@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.rarora.barcodereader.BarcodeReader;
@@ -17,10 +18,6 @@ public class ScanActivity extends AppCompatActivity implements BarcodeReader.Bar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         View view = (View) findViewById(R.id.barcode_scanner);
-        float scalingFactor = 1f; // scale down to half the size
-        view.setScaleX(scalingFactor);
-        view.setScaleY(scalingFactor);
-
     }
 
     @Override
@@ -30,13 +27,12 @@ public class ScanActivity extends AppCompatActivity implements BarcodeReader.Bar
         Intent intent = new Intent(ScanActivity.this, FinalActivity.class);
         intent.putExtra("numCodes", "single");
         intent.putExtra("barcode", code);
-
         ScanActivity.this.startActivity(intent);
     }
 
     @Override
     public void onScannedMultiple(List<Barcode> list) {
-        // multiple barcodes scanned
+        Toast.makeText(getBaseContext(), "Please scan one code at a time", Toast.LENGTH_LONG).show();
     }
 
     @Override

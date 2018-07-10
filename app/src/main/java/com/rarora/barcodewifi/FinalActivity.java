@@ -94,10 +94,8 @@ public class FinalActivity extends AppCompatActivity {
             if(i.SSID != null && i.SSID.equals("\"" + wifiSSID + "\"")) {
                 wifiManager.enableNetwork(i.networkId, true);
                 wifiManager.reconnect();
-
                 break;
             }
         }
-
     }
 }
